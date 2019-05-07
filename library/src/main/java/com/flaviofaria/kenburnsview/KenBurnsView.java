@@ -34,8 +34,8 @@ import android.widget.ImageView;
  */
 public class KenBurnsView extends ImageView {
 
-    /** Delay between a pair of frames at a 60 FPS frame rate. */
-    private static final long FRAME_DELAY = 1000 / 60;
+    /** Delay between a pair of frames at a 24 FPS frame rate. */
+    private static final long FRAME_DELAY = 1000 / 24;
 
     /** Matrix used to perform all the necessary transition transformations. */
     private final Matrix mMatrix = new Matrix();
