@@ -23,6 +23,8 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 /**
@@ -34,8 +36,8 @@ import android.widget.ImageView;
  */
 public class KenBurnsView extends ImageView {
 
-    /** Delay between a pair of frames at a 24 FPS frame rate. */
-    private static final long FRAME_DELAY = 1000 / 24;
+    /** Delay between a pair of frames at a 60 FPS frame rate. */
+    private static final long FRAME_DELAY = 1000 / 60;
 
     /** Matrix used to perform all the necessary transition transformations. */
     private final Matrix mMatrix = new Matrix();
@@ -227,7 +229,7 @@ public class KenBurnsView extends ImageView {
             return; // Can't call restart() when view area is zero.
         }
 
-        updateViewport(width, height);
+        updateViewport(getRelativeLeft(this), getRelativeTop(this), width, height);
         updateDrawableBounds();
 
         startNewTransition();
@@ -280,8 +282,8 @@ public class KenBurnsView extends ImageView {
      * @param width the new viewport with.
      * @param height the new viewport height.
      */
-    private void updateViewport(float width, float height) {
-        mViewportRect.set(0, 0, width, height);
+    private void updateViewport(float x, float y, float width, float height) {
+        mViewportRect.set(x, y, width + x, height + y);
     }
 
 
@@ -339,6 +341,18 @@ public class KenBurnsView extends ImageView {
         invalidate();
     }
 
+
+    private static int getRelativeLeft(View view) {
+        if (view == null) return 0;
+        if (view.getParent() == view.getRootView()) return view.getLeft();
+        return view.getLeft() + getRelativeLeft((View)view.getParent());
+    }
+
+    private static int getRelativeTop(View view) {
+        if (view == null) return 0;
+        if (view.getParent() == view.getRootView()) return view.getTop();
+        return view.getTop() + getRelativeTop((View)view.getParent());
+    }
 
     /**
      * A transition listener receives notifications when a transition starts or ends.
